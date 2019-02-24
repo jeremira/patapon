@@ -4,7 +4,7 @@ RSpec.describe "User Create", :type => :request do
   let(:parsed_body) {JSON.parse(response.body).symbolize_keys}
 
   before :each do
-    allow(Mirroring::UserCreate).to receive(:new)
+    allow(UserWorker).to receive(:perform_async)
     post api_v1_users_path(user_params)
   end
 
@@ -12,7 +12,7 @@ RSpec.describe "User Create", :type => :request do
     let(:user_params) {{email: "test1@babar.com"}}
 
     it "instanciate a user mirroring process" do
-      expect(Mirroring::UserCreate).to have_received(:new).with(user_params)
+      expect(UserWorker).to have_received(:perform_async).with(user_params)
     end
     it "render 200" do
       expect(response.status).to eq 200
@@ -28,7 +28,7 @@ RSpec.describe "User Create", :type => :request do
       let(:user_params) {nil}
 
       it "do not instanciate a user mirroring process" do
-        expect(Mirroring::UserCreate).not_to have_received(:new).with(user_params)
+        expect(UserWorker).not_to have_received(:perform_async)
       end
       it "render 422" do
         expect(response.status).to eq 422
@@ -42,7 +42,7 @@ RSpec.describe "User Create", :type => :request do
       let(:user_params) {{email: ""}}
 
       it "do not instanciate a user mirroring process" do
-        expect(Mirroring::UserCreate).not_to have_received(:new).with(user_params)
+        expect(UserWorker).not_to have_received(:perform_async)
       end
       it "render 422" do
         expect(response.status).to eq 422
@@ -56,7 +56,7 @@ RSpec.describe "User Create", :type => :request do
       let(:user_params) {{email: nil}}
 
       it "do not instanciate a user mirroring process" do
-        expect(Mirroring::UserCreate).not_to have_received(:new).with(user_params)
+        expect(UserWorker).not_to have_received(:perform_async)
       end
       it "render 422" do
         expect(response.status).to eq 422
