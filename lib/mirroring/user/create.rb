@@ -24,26 +24,21 @@ module Mirroring
 
       private
 
+      #
+      # Return false if one of the external creation process failed
+      #
       def mirroring_user_failed?
         process_external_mirroring.include? false
       end
 
+      #
+      # Will create user in each external services
+      #
       def process_external_mirroring
         supported_mirrors.map do |mirror|
-          mirror.create_user(email: @internal_user.email)
+          response = mirror.create_user(email: @internal_user.email)
+          return false unless response # if any call fail, we break appart
         end
-      end
-
-      def create_and_mirror_user
-        # build user
-        # if user valid
-        #  for all mirror services : mirror_user
-        #Hubspot::User::Create.new()
-        # if only valid
-        # save user
-
-        # return user > all was fine
-        # return nil/false > something fail
       end
     end
   end
