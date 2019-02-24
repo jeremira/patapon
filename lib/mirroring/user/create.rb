@@ -19,7 +19,7 @@ module Mirroring
       # List all supported external services where User will be created
       #
       def supported_mirrors
-         [Hubspot]
+         [External::Hubspot]
       end
 
       private
@@ -36,8 +36,7 @@ module Mirroring
       #
       def process_external_mirroring
         supported_mirrors.map do |mirror|
-          response = mirror.create_user(email: @internal_user.email)
-          return false unless response # if any call fail, we break appart
+          mirror.create_user(email: @internal_user.email)
         end
       end
     end

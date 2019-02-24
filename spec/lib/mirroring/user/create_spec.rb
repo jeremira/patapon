@@ -39,7 +39,7 @@ describe "Mirroring::User::Create" do
       expect(user_creator.supported_mirrors).to be_an Array
     end
     it "return all external services supported" do
-      expect(user_creator.supported_mirrors).to eq([Hubspot])
+      expect(user_creator.supported_mirrors).to eq([External::Hubspot])
     end
   end
 
