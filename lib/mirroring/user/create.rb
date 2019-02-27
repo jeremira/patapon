@@ -4,6 +4,7 @@ module Mirroring
       attr_reader :internal_user
 
       def initialize(params={})
+        params.symbolize_keys!
         @internal_user = ::User.new(
           email: params[:email].presence,
           note: params[:note].presence

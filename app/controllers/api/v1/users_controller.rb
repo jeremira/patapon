@@ -3,7 +3,7 @@ module Api
     class UsersController < ActionController::API
       def create
         if params[:email].present?
-          UserWorker.perform_async(email: params[:email])
+          UserWorker.perform_async(email: params[:email], note: params[:note])
           render json: {error: nil}, status: 200
         else
           render json: {error: "An email is required."}, status: 422
@@ -12,3 +12,4 @@ module Api
     end
   end
 end
+#todo dont forget strong params
