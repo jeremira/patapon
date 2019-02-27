@@ -18,6 +18,9 @@ describe "Mirroring::User::Create" do
       it "setup user email to nil" do
         expect(user_creator.internal_user.email).to be nil
       end
+      it "setup user note to nil" do
+        expect(user_creator.internal_user.note).to be nil
+      end
     end
 
     context "with email params" do
@@ -30,6 +33,24 @@ describe "Mirroring::User::Create" do
       end
       it "setup user email to correct value" do
         expect(user_creator.internal_user.email).to eq "babar@test.com"
+      end
+      it "setup user note to nil" do
+        expect(user_creator.internal_user.note).to be nil
+      end
+    end
+    context "with email & note params" do
+      let(:user_params) {{email: "babar@test.com", note: "my ubah note"}}
+      it "expose user" do
+        expect(user_creator.internal_user).to be_an User
+      end
+      it "do not persist user" do
+        expect(user_creator.internal_user.persisted?).to be false
+      end
+      it "setup user email to correct value" do
+        expect(user_creator.internal_user.email).to eq "babar@test.com"
+      end
+      it "setup user note to correct value" do
+        expect(user_creator.internal_user.note).to eq "my ubah note"
       end
     end
   end
@@ -49,7 +70,7 @@ describe "Mirroring::User::Create" do
     # Stub class for external services
     #
     class self::Babar
-      def self.create_user(email:) ; end
+      def self.create_user(email:, note: nil) ; end
     end
 
     before :each do
@@ -74,7 +95,7 @@ describe "Mirroring::User::Create" do
     end
 
     context "for a valid user" do
-      let(:user_params) {{email: "babar@test.com"}}
+      let(:user_params) {{email: "babar@test.com", note: "moubah"}}
 
       context "and a valid external call" do
         let(:stubbed_external_answer) {true}
@@ -83,7 +104,7 @@ describe "Mirroring::User::Create" do
           expect{on_try_fonction}.to change(::User, :count).by 1
         end
         it "do mirror User in Babar services" do
-          expect(self.class::Babar).to receive(:create_user).with(email: "babar@test.com")
+          expect(self.class::Babar).to receive(:create_user).with(email: "babar@test.com", note: "moubah")
           on_try_fonction
         end
         it "return User instance" do
@@ -101,7 +122,7 @@ describe "Mirroring::User::Create" do
           expect{on_try_fonction}.not_to change(User, :count)
         end
         it "do mirror User in Babar services" do
-          expect(self.class::Babar).to receive(:create_user).with(email: "babar@test.com")
+          expect(self.class::Babar).to receive(:create_user).with(email: "babar@test.com", note: "moubah")
           on_try_fonction
         end
         it "return nil" do

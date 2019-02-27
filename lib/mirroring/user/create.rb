@@ -3,8 +3,11 @@ module Mirroring
     class Create
       attr_reader :internal_user
 
-      def initialize(**params)
-        @internal_user = ::User.new(email: params[:email].presence)
+      def initialize(params={})
+        @internal_user = ::User.new(
+          email: params[:email].presence,
+          note: params[:note].presence
+        )
       end
 
       def mirror_and_save_user
@@ -36,7 +39,10 @@ module Mirroring
       #
       def process_external_mirroring
         supported_mirrors.map do |mirror|
-          mirror.create_user(email: @internal_user.email)
+          mirror.create_user(
+            email: @internal_user.email,
+            note: @internal_user.note
+          )
         end
       end
     end

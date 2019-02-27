@@ -2,6 +2,7 @@ module External
   class Hubspot
 
     def self.create_user(email:, note: nil)
+      byebug
       config_api
       contact = ::Hubspot::Contact.create!(email)
       add_note(contact_id: contact.vid, note: note) if note.presence
