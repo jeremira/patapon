@@ -11,6 +11,10 @@ module Mirroring
         )
       end
 
+      #
+      # Mirror valid User instance in external services
+      # before to persist it in DB
+      #
       def mirror_and_save_user
         if @internal_user.valid?
           return false if mirroring_user_failed?
